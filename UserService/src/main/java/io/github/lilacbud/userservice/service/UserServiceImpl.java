@@ -1,9 +1,9 @@
 package io.github.lilacbud.userservice.service;
 
+import io.github.lilacbud.commonmodels.UserMessage;
 import io.github.lilacbud.userservice.dto.UserDTO;
 import io.github.lilacbud.userservice.mappers.UserMapper;
 import io.github.lilacbud.userservice.models.User;
-import io.github.lilacbud.userservice.models.UserMessage;
 import io.github.lilacbud.userservice.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.ArrayList;
@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-    private static final String TOPIC = "user_events";
+    private static final String TOPIC = "user-events";
     private final UserRepository repository;
     private final UserMapper mapper;
     private final KafkaTemplate<String, UserMessage> kafkaTemplate;
@@ -36,7 +36,9 @@ public class UserServiceImpl implements UserService {
         repository.deleteById(id);
         System.out.println("Deleting was successfully called");
         foundUser.ifPresent(user -> {
-            UserMessage message = new UserMessage(UserMessage.UserEvent.USER_DELETED, user.getEmail());
+            UserMessage message = new UserMessage();
+            message.setUserEvent(UserMessage.UserEvent.USER_DELETED);
+            message.setUserEmail(user.getEmail());
             kafkaTemplate.send(TOPIC, message);
         });
     }
@@ -46,7 +48,9 @@ public class UserServiceImpl implements UserService {
     public UserDTO saveUser(UserDTO dto) {
         User user = repository.save(mapper.mapToUserEntity(dto));
         System.out.println("Saving was successfully called for " + dto);
-        UserMessage message = new UserMessage(UserMessage.UserEvent.USER_CREATED, user.getEmail());
+        UserMessage message = new UserMessage();
+        message.setUserEvent(UserMessage.UserEvent.USER_CREATED);
+        message.setUserEmail(user.getEmail());
         kafkaTemplate.send(TOPIC, message);
         return mapper.mapToUserDTO(user);
     }
@@ -74,7 +78,9 @@ public class UserServiceImpl implements UserService {
         repository.deleteAll();
         System.out.println("Deleting was successfully called");
         users.forEach(user -> {
-            UserMessage message = new UserMessage(UserMessage.UserEvent.USER_DELETED, user.getEmail());
+            UserMessage message = new UserMessage();
+            message.setUserEvent(UserMessage.UserEvent.USER_DELETED);
+            message.setUserEmail(user.getEmail());
             kafkaTemplate.send(TOPIC, message);
         });
     } 

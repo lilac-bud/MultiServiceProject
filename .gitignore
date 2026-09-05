@@ -90,3 +90,4 @@ nb-configuration.xml
 *.log
 /nbproject/
 /UserService/config/application.properties
+/NotificationService/config/application.properties
