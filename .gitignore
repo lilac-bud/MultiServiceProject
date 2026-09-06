@@ -91,3 +91,4 @@ nb-configuration.xml
 /nbproject/
 /UserService/config/application.properties
 /NotificationService/config/application.properties
+/NotificationService/nbproject/
