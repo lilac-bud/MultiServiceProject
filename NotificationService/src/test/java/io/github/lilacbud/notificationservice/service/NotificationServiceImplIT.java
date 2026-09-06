@@ -40,7 +40,7 @@ public class NotificationServiceImplIT {
         UserMessage message = new UserMessage();
         message.setUserEvent(UserMessage.UserEvent.USER_CREATED);
         message.setUserEmail("test@gmail.com");
-        String expectedReceaver = "test@gmail.com";
+        String expectedReceiver = "test@gmail.com";
         String expectedSubject = "Уведомление";
         String expectedText = "Здравствуйте! Ваш аккаунт был успешно создан.";
         
@@ -49,7 +49,7 @@ public class NotificationServiceImplIT {
         greenMail.waitForIncomingEmail(1);
         MimeMessage[] receivedMessages = greenMail.getReceivedMessages();
         MimeMessage receivedMessage = receivedMessages[0];
-        assertEquals(expectedReceaver, receivedMessage.getAllRecipients()[0].toString());
+        assertEquals(expectedReceiver, receivedMessage.getAllRecipients()[0].toString());
         assertEquals(expectedSubject, receivedMessage.getSubject().trim());
         assertEquals(expectedText, receivedMessage.getContent().toString().trim());
     }   

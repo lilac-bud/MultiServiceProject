@@ -28,7 +28,7 @@ public class EmailServiceImplIT {
         dto.setEmail("test@gmail.com");
         dto.setSubject("Subject");
         dto.setMessage("Message");
-        String expectedReceaver = "test@gmail.com";
+        String expectedReceiver = "test@gmail.com";
         String expectedSubject = "Subject";
         String expectedText = "Message";
         
@@ -36,7 +36,7 @@ public class EmailServiceImplIT {
         
         MimeMessage[] receivedMessages = greenMail.getReceivedMessages();
         MimeMessage receivedMessage = receivedMessages[0];
-        assertEquals(expectedReceaver, receivedMessage.getAllRecipients()[0].toString());
+        assertEquals(expectedReceiver, receivedMessage.getAllRecipients()[0].toString());
         assertEquals(expectedSubject, receivedMessage.getSubject().trim());
         assertEquals(expectedText, receivedMessage.getContent().toString().trim());
     }
