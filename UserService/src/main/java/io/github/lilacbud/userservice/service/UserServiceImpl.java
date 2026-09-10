@@ -34,7 +34,6 @@ public class UserServiceImpl implements UserService {
     public void deleteUserById(Long id) {
         Optional<User> foundUser = repository.findById(id);
         repository.deleteById(id);
-        System.out.println("Deleting was successfully called");
         foundUser.ifPresent(user -> {
             UserMessage message = new UserMessage();
             message.setUserEvent(UserMessage.UserEvent.USER_DELETED);
@@ -47,7 +46,6 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public UserDTO saveUser(UserDTO dto) {
         User user = repository.save(mapper.mapToUserEntity(dto));
-        System.out.println("Saving was successfully called for " + dto);
         UserMessage message = new UserMessage();
         message.setUserEvent(UserMessage.UserEvent.USER_CREATED);
         message.setUserEmail(user.getEmail());
@@ -58,9 +56,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTO updateUser(Long id, UserDTO dto) {
         User user = repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Failed to find user"));
-        UserDTO result = mapper.mapToUserDTO(repository.save(mapper.mapToUserEntity(dto, user)));
-        System.out.println("Updating was successfully called for " + dto);
-        return result;
+        return mapper.mapToUserDTO(repository.save(mapper.mapToUserEntity(dto, user)));
     }
 
     @Override
@@ -76,7 +72,6 @@ public class UserServiceImpl implements UserService {
     public void deleteAllUsers() {
         Iterable<User> users = repository.findAll();
         repository.deleteAll();
-        System.out.println("Deleting was successfully called");
         users.forEach(user -> {
             UserMessage message = new UserMessage();
             message.setUserEvent(UserMessage.UserEvent.USER_DELETED);
