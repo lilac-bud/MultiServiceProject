@@ -10,8 +10,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class NotificationServiceImpl implements NotificationService {
     private static final String SUBJECT = "Уведомление";
-    private static final String CREATED_MESSAGE = "Здравствуйте! Ваш аккаунт был успешно создан.";
-    private static final String DELETED_MESSAGE = "Здравствуйте! Ваш аккаунт был удалён.";
     
     private final EmailService emailService;
      
@@ -21,10 +19,7 @@ public class NotificationServiceImpl implements NotificationService {
         EmailMessageDTO dto = new EmailMessageDTO();
         dto.setEmail(message.getUserEmail());
         dto.setSubject(SUBJECT);
-        switch(message.getUserEvent()) {
-            case USER_CREATED -> dto.setMessage(CREATED_MESSAGE);
-            case USER_DELETED -> dto.setMessage(DELETED_MESSAGE);
-        }
+        dto.setMessage(message.getUserEvent().getText());
         emailService.sendEmail(dto);
     }
 }
