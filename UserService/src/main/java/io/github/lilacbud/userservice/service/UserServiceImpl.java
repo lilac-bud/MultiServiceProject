@@ -1,7 +1,9 @@
 package io.github.lilacbud.userservice.service;
 
 import io.github.lilacbud.commonmodels.UserMessage;
-import io.github.lilacbud.userservice.dto.UserDTO;
+import io.github.lilacbud.userservice.dto.CreateUserRequest;
+import io.github.lilacbud.userservice.dto.UpdateUserRequest;
+import io.github.lilacbud.userservice.dto.UserResponse;
 import io.github.lilacbud.userservice.mappers.UserMapper;
 import io.github.lilacbud.userservice.models.User;
 import io.github.lilacbud.userservice.repository.UserRepository;
@@ -24,8 +26,8 @@ public class UserServiceImpl implements UserService {
     
     @Override
     @Transactional(readOnly = true)
-    public UserDTO findUserById(Long id) {
-        return mapper.mapToUserDTO(repository.findById(id).orElseThrow(() 
+    public UserResponse findUserById(Long id) {
+        return mapper.mapToUserResponse(repository.findById(id).orElseThrow(() 
                 -> new EntityNotFoundException("Failed to find user")));
     }
 
@@ -41,29 +43,29 @@ public class UserServiceImpl implements UserService {
             kafkaTemplate.send(TOPIC, message);
         });
     }
-
+    
     @Override
     @Transactional
-    public UserDTO saveUser(UserDTO dto) {
+    public UserResponse saveUser(CreateUserRequest dto) {
         User user = repository.save(mapper.mapToUserEntity(dto));
         UserMessage message = new UserMessage();
         message.setUserEvent(UserMessage.UserEvent.USER_CREATED);
         message.setUserEmail(user.getEmail());
         kafkaTemplate.send(TOPIC, message);
-        return mapper.mapToUserDTO(user);
+        return mapper.mapToUserResponse(user);
     }
 
     @Override
-    public UserDTO updateUser(Long id, UserDTO dto) {
+    public UserResponse updateUser(Long id, UpdateUserRequest dto) {
         User user = repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Failed to find user"));
-        return mapper.mapToUserDTO(repository.save(mapper.mapToUserEntity(dto, user)));
+        return mapper.mapToUserResponse(repository.save(mapper.mapToUserEntity(dto, user)));
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<UserDTO> findAllUsers() {
-        List<UserDTO> resultList = new ArrayList<>();
-        repository.findAll().forEach(user -> resultList.add(mapper.mapToUserDTO(user)));
+    public List<UserResponse> findAllUsers() {
+        List<UserResponse> resultList = new ArrayList<>();
+        repository.findAll().forEach(user -> resultList.add(mapper.mapToUserResponse(user)));
         return resultList;
     }
 
