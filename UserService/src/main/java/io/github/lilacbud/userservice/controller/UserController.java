@@ -12,6 +12,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 import org.springframework.http.HttpStatus;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import org.springframework.validation.annotation.Validated;
@@ -42,8 +45,13 @@ public class UserController {
     })
     @ResponseStatus(HttpStatus.OK)
     @GetMapping(produces = APPLICATION_JSON_VALUE)
-    public List<UserResponse> findAllUsers() {
-        return service.findAllUsers();
+    public CollectionModel<EntityModel<UserResponse>> findAllUsers() {
+        List<EntityModel<UserResponse>> userModels = service.findAllUsers().stream()
+                .map(user -> EntityModel.of(
+                        user, 
+                        linkTo(methodOn(UserController.class).findUserById(user.getId())).withSelfRel()
+                )).toList();
+        return CollectionModel.of(userModels, linkTo(methodOn(UserController.class).findAllUsers()).withSelfRel());
     }
     
     @Tag(name = "find")
@@ -61,8 +69,13 @@ public class UserController {
     })
     @ResponseStatus(HttpStatus.OK)
     @GetMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
-    public UserResponse findUserById(@PathVariable Long id) {
-        return service.findUserById(id);
+    public EntityModel<UserResponse> findUserById(@PathVariable Long id) {
+        EntityModel<UserResponse> userModel = EntityModel.of(
+                service.findUserById(id), 
+                linkTo(methodOn(UserController.class).findUserById(id)).withSelfRel(),
+                linkTo(methodOn(UserController.class).findAllUsers()).withRel("all-users")
+        );
+        return userModel;
     }
     
     @Tag(name = "create")
@@ -75,8 +88,13 @@ public class UserController {
     })
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
-    public UserResponse createUser(@Valid @RequestBody CreateUserRequest dto) {
-        return service.saveUser(dto);
+    public EntityModel<UserResponse> createUser(@Valid @RequestBody CreateUserRequest dto) {
+        UserResponse user = service.saveUser(dto);
+        EntityModel<UserResponse> userModel = EntityModel.of(
+                user, 
+                linkTo(methodOn(UserController.class).findUserById(user.getId())).withSelfRel()
+        );
+        return userModel;
     }
     
     @Tag(name = "update")
@@ -94,8 +112,13 @@ public class UserController {
     })
     @ResponseStatus(HttpStatus.OK)
     @PatchMapping(value = "/{id}", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
-    public UserResponse updateUser(@PathVariable Long id, @Valid @RequestBody UpdateUserRequest dto) {
-        return service.updateUser(id, dto);
+    public EntityModel<UserResponse> updateUser(@PathVariable Long id, @Valid @RequestBody UpdateUserRequest dto) {
+        UserResponse user = service.updateUser(id, dto);
+        EntityModel<UserResponse> userModel = EntityModel.of(
+                user,
+                linkTo(methodOn(UserController.class).findUserById(user.getId())).withSelfRel()
+        );
+        return userModel;
     }
     
     @Tag(name = "delete")
