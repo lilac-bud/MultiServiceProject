@@ -17,7 +17,7 @@ public class UserMapper {
         entity.setName(dto.getName());
         entity.setEmail(dto.getEmail());
         entity.setAge(dto.getAge());
-        return null;
+        return entity;
     }
     
     public User mapToUserEntity(UpdateUserRequest dto, User entity) {
