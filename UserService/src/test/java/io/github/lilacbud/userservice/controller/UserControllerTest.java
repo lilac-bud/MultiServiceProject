@@ -1,6 +1,8 @@
 package io.github.lilacbud.userservice.controller;
 
-import io.github.lilacbud.userservice.dto.UserDTO;
+import io.github.lilacbud.userservice.dto.CreateUserRequest;
+import io.github.lilacbud.userservice.dto.UpdateUserRequest;
+import io.github.lilacbud.userservice.dto.UserResponse;
 import io.github.lilacbud.userservice.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
@@ -21,16 +23,16 @@ public class UserControllerTest {
     @MockitoBean
     private UserService service;
     
-    private final UserDTO user1;
-    private final UserDTO user2;
+    private final UserResponse user1;
+    private final UserResponse user2;
     
     public UserControllerTest() {
-        user1 = new UserDTO();
+        user1 = new UserResponse();
         user1.setId(1L);
         user1.setName("Alex");
         user1.setEmail("alex@alex.com");
         user1.setAge(18);
-        user2 = new UserDTO();
+        user2 = new UserResponse();
         user2.setId(2L);
         user2.setName("Rose");
         user2.setEmail("rose@rose.com");
@@ -68,7 +70,7 @@ public class UserControllerTest {
 
     @Test
     public void givenThatUserIsValid_whenCreatingUser_thenReturnCreatedUser() throws Exception {
-        UserDTO dto = new UserDTO();
+        CreateUserRequest dto = new CreateUserRequest();
         dto.setName("Alex");
         dto.setEmail("alex@alex.com");
         dto.setAge(18);
@@ -95,7 +97,7 @@ public class UserControllerTest {
 
     @Test
     public void givenThatUserExistsAndUpdateIsValid_whenUpdatingUser_thenReturnUpdatedUser() throws Exception {
-        UserDTO dto = new UserDTO();
+        UpdateUserRequest dto = new UpdateUserRequest();
         dto.setEmail("alex@alex.com");
         when(service.updateUser(1L, dto)).thenReturn(user1);
         mvc.perform(patch("/users/1")
@@ -111,7 +113,7 @@ public class UserControllerTest {
     
     @Test
     public void givenThatUserDoesNotExist_whenUpdatingUser_thenReturnStatusNotFound() throws Exception {
-        UserDTO dto = new UserDTO();
+        UpdateUserRequest dto = new UpdateUserRequest();
         dto.setEmail("alex@alex.com");
         when(service.updateUser(1L, dto)).thenThrow(EntityNotFoundException.class);
         mvc.perform(patch("/users/1")

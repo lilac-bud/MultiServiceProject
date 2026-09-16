@@ -1,13 +1,15 @@
 package io.github.lilacbud.userservice.service;
 
-import io.github.lilacbud.userservice.dto.UserDTO;
+import io.github.lilacbud.userservice.dto.CreateUserRequest;
+import io.github.lilacbud.userservice.dto.UpdateUserRequest;
+import io.github.lilacbud.userservice.dto.UserResponse;
 import java.util.List;
 
 public interface UserService {
-    UserDTO findUserById(Long id);
+    UserResponse findUserById(Long id);
     void deleteUserById(Long id);
-    UserDTO saveUser(UserDTO dto);
-    UserDTO updateUser(Long id, UserDTO dto);
-    List<UserDTO> findAllUsers();
+    UserResponse saveUser(CreateUserRequest dto);
+    UserResponse updateUser(Long id, UpdateUserRequest dto);
+    List<UserResponse> findAllUsers();
     void deleteAllUsers();
 }
