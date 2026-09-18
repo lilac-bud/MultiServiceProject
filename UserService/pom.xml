@@ -9,7 +9,7 @@
     <artifactId>UserService</artifactId>
     <packaging>jar</packaging>
     <properties>
-        <start-class>io.github.lilacbud.userservice.UserServiceMain</start-class>
+        <start-class>io.github.lilacbud.userservice.UserServiceApplication</start-class>
     </properties>
     <dependencies>
         <dependency>

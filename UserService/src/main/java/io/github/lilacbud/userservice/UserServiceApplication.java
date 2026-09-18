@@ -1,11 +1,11 @@
-package io.github.lilacbud.notificationservice;
+package io.github.lilacbud.userservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class NotificationServiceMain {
+public class UserServiceApplication {
     public static void main(String[] args) {
-        SpringApplication.run(NotificationServiceMain.class, args);
+        SpringApplication.run(UserServiceApplication.class, args);
     }
 }
