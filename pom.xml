@@ -85,5 +85,6 @@
         <module>NotificationService</module>
         <module>CommonModels</module>
         <module>ProjectGateway</module>
+        <module>EurekaServer</module>
     </modules>
 </project>
