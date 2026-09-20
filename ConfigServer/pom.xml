@@ -6,19 +6,15 @@
         <artifactId>MultiServiceProject</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
-    <artifactId>EurekaServer</artifactId>
+    <artifactId>ConfigServer</artifactId>
     <packaging>jar</packaging>
     <properties>
-        <start-class>io.github.lilacbud.eurekaserver.EurekaServerApplication</start-class>
+        <start-class>io.github.lilacbud.configserver.ConfigServerApplication</start-class>
     </properties>
     <dependencies>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-config</artifactId>
+            <artifactId>spring-cloud-config-server</artifactId>
         </dependency>
     </dependencies>
     <build>
