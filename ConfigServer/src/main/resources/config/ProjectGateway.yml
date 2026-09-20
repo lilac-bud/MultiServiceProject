@@ -22,20 +22,14 @@ spring:
                 - Path=/users/**
               filters:
                 - name: CircuitBreaker
-                  args:
-                    fallbackUri: forward:/fallback/message
             - id: email-message-route
               uri: lb://notificationservice
               predicates:
                 - Path=/email-message/**
               filters:
                 - name: CircuitBreaker
-                  args:
-                    fallbackUri: forward:/fallback/message
 resilience4j.circuitbreaker:
     configs:
         default:
             registerHealthIndicator: true
-            slidingWindowSize: 5
-            failureRateThreshold: 50
             waitDurationInOpenState: 10s
