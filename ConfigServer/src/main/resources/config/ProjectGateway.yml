@@ -1,0 +1,43 @@
+server:
+  port: 8080
+eureka:
+  instance:
+    preferIpAddress: true
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+spring:
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      server:
+        webflux:
+          routes:
+            - id: users-route
+              uri: lb://userservice
+              predicates:
+                - Path=/users/**
+              filters:
+                - name: CircuitBreaker
+                  args:
+                    name: users-route-breaker
+                    fallbackUri: forward:/fallback/message
+            - id: email-message-route
+              uri: lb://notificationservice
+              predicates:
+                - Path=/email-message/**
+              filters:
+                - name: CircuitBreaker
+                  args:
+                    name: email-message-route-breaker
+                    fallbackUri: forward:/fallback/message
+resilience4j.circuitbreaker:
+    configs:
+        default:
+            registerHealthIndicator: true
+            slidingWindowSize: 5
+            failureRateThreshold: 50
+            waitDurationInOpenState: 10s

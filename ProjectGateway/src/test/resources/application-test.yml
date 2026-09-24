@@ -1,0 +1,32 @@
+server:
+  port: 8080
+eureka:
+  client:
+    enabled: false
+spring:
+  cloud:
+    service-registry:
+      auto-registration:
+        enabled: false
+    gateway:
+      server:
+        webflux:
+          routes:
+            - id: test-server
+              uri: http://localhost:8081
+              predicates:
+                - Path=/test/**
+              filters:
+                - name: CircuitBreaker
+                  args:
+                    name: test-server-breaker
+                    fallbackUri: forward:/fallback/message
+            - id: unavble-server
+              uri: http://localhost:8082
+              predicates:
+                - Path=/unavble/**
+              filters:
+                - name: CircuitBreaker
+                  args:
+                    name: unavble-server-breaker
+                    fallbackUri: forward:/fallback/message
