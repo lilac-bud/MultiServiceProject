@@ -92,3 +92,5 @@ nb-configuration.xml
 /UserService/config/application.properties
 /NotificationService/config/application.properties
 /NotificationService/nbproject/
+/ConfigServer/nbproject/
+/ProjectGateway/nbproject/
