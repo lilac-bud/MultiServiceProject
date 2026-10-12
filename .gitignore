@@ -89,8 +89,9 @@ nb-configuration.xml
 ##############################
 *.log
 /nbproject/
-/UserService/config/application.properties
-/NotificationService/config/application.properties
 /NotificationService/nbproject/
 /ConfigServer/nbproject/
 /ProjectGateway/nbproject/
+/.env
+/NotificationService/src/main/resources/config/application.properties
+/UserService/src/main/resources/config/application.properties
